@@ -57,7 +57,7 @@ app.get('/high-rating', async(req, res) => {
     }catch(error){
    res.status(404).json({
     success: false,
-    message: "server error!"
+    message: ""
    })
     }
 })

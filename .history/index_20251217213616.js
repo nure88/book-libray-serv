@@ -52,13 +52,10 @@ app.get('/high-rating', async(req, res) => {
    const result = await bookCollection.find().sort({_id: 1}).limit(1).toArray();
    res.status(200).json({
     success:true,
-    result
+    message: ""
    })
     }catch(error){
-   res.status(404).json({
-    success: false,
-    message: "server error!"
-   })
+
     }
 })
 

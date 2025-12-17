@@ -1,3 +1,39 @@
+const express = require('express');
+const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+ require('dotenv').config();
+const app = express();
+const PORT = process.env.PORT || 500;
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/',(req,res) => {
+    res.send('book server is runnig!')
+})
+const uri = "mongodb+srv://bookDB:nrfUt4UvHQ6wadsR@app.zxmaonq.mongodb.net/?appName=app";
+
+
+const client = new MongoClient(uri,{
+    serverApi:{
+        version: ServerApiVersion.v1,
+        strict:true,
+        deprecationErrors:true
+    }
+});
+// bookDB data base name
+async function run(){
+    try{
+  await client.connect();
+ const db = client.db('bookDB');
+ const bookCollection = db.collection('books');
+
+app.get('/books/:id',async(req, res) => {
+    const id = req.params.id;
+    const query = {_id: new ObjectId(id)};
+    const result = await bookCollection.findOne(query);
+    res.send(result);
+})
 
 //get latest 6 book
 app.get('/latest-books', async(req, res) => {
@@ -10,6 +46,18 @@ app.get('/latest-books', async(req, res) => {
     }
 });
 
+//hilight rating book
+app.get('/high-rating', async(req, res) => {
+    try{
+   const result = await bookCollection.find().sort({_id: 1}).limit(1).toArray();
+   res.status(200).json({
+    success:true,
+    result
+   })
+    }catch(error){
+   res.status(404).json
+    }
+})
 
 //  get all books api
 app.get('/books', async(req,res) => {
@@ -97,4 +145,19 @@ app.delete('/books/:id', async(req, res) => {
     message:"book delete fail"
   })
     }
+})
+
+  await client.db('admin').command({ping:1});
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    }
+    finally{
+
+    }
+}
+run().catch(console.dir)
+
+
+app.listen(PORT, ()=>{
+    console.log(`http://localhost:${PORT}`);
+    
 })

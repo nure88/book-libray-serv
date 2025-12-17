@@ -49,16 +49,9 @@ app.get('/latest-books', async(req, res) => {
 //hilight rating book
 app.get('/high-rating', async(req, res) => {
     try{
-   const result = await bookCollection.find().sort({_id: 1}).limit(1).toArray();
-   res.status(200).json({
-    success:true,
-    result
-   })
+   const result = await bookCollection.find().sort({})
     }catch(error){
-   res.status(404).json({
-    success: false,
-    message: "server error!"
-   })
+
     }
 })
 
