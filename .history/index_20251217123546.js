@@ -47,9 +47,43 @@ app.get('/books/:id',async(req, res) => {
 
 
 //  post api
+app.post('/books', async(req, res) => {
+try{
+ const book = req.body;
+ const result =await bookCollection.insertOne(book);
+ res.status(200).json({
+    success:true,
+    message:"book added successfully",
+    result
+ })
+ 
+}
+catch(error){
+res.status(401).json({
+    success: false,
+    message: "book added fail!"
+})
+}
 
+});
 // delete api
-
+app.delete('/books/:id', async(req, res) => {
+    try{
+ const id = req.params.id;
+ const query = {_id: new ObjectId(id)}
+ const result = await bookCollection.deleteOne(query);
+  res.status(200).json({
+    success: true,
+    message:"book delete succesfully!",
+    result
+  })
+    }catch(error){
+  res.status(401).json({
+    success:true,
+    message:"book delete fail"
+  })
+    }
+})
 
   await client.db('admin').command({ping:1});
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
